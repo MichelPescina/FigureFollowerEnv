@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="omni_robot">
+    <xacro:include filename="$(cwd)/Resources/omni_robot/wheel.urdf.xacro"/>
+    <xacro:property name="chasis_x" value="0.2"/>
+    <xacro:property name="chasis_y" value="0.09"/>
+    <xacro:property name="chasis_z" value="0.025"/>
+    <xacro:property name="chasis_mass" value="0.451"/>
+    <xacro:property name="chasis_mu" value="0.5"/>
+    <xacro:property name="chasis_linkname" value="base_link"/>
+    <xacro:property name="chasis_material" value="green"/>
+    <xacro:property name="cam_x" value="${chasis_y/2}"/>
+    <xacro:property name="cam_y" value="${chasis_y/2}"/>
+    <xacro:property name="cam_z" value="${chasis_y/2}"/>
+    <xacro:property name="cam_px" value="${chasis_x/2}"/>
+    <xacro:property name="cam_py" value="0.0"/>
+    <xacro:property name="cam_pz" value="${chasis_z + cam_z/2}"/>
+    <xacro:property name="cam_mass" value="0.01"/>
+    <xacro:property name="cam_material" value="transp"/>
+    <xacro:macro name="box_gen" params="linkname x y z mass mu material">
+        <link name="${linkname}">
+            <visual>
+                <geometry>
+                    <box size="${x} ${y} ${z}"/>
+                </geometry>
+                <material name="${material}"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${x} ${y} ${z}"/>
+                </geometry>
+                <contact_coefficients mu="${mu}"/>
+            </collision>
+            <inertial>
+                <mass value="${mass}"/>
+                <inertia ixx="${mass * (z**2 + y**2) / 12}" ixy="0.0" ixz="0.0"
+                         iyy="${mass * (z**2 + x**2) / 12}" iyz="0.0"
+                         izz="${mass * (x**2 + y**2) / 12}"/>
+            </inertial>
+        </link>
+    </xacro:macro>
+    <xacro:macro name="trick_box" params="linkname x y z">
+        <xacro:property name="mass" value="0.0"/>
+        <link name="${linkname}">
+            <visual>
+                <geometry>
+                    <box size="${x} ${y} ${z}"/>
+                </geometry>
+                <material name="transp"/>
+            </visual>
+            <inertial>
+                <mass value="${mass}"/>
+                <inertia ixx="${mass * (z**2 + y**2) / 12}" ixy="0.0" ixz="0.0"
+                         iyy="${mass * (z**2 + x**2) / 12}" iyz="0.0"
+                         izz="${mass * (x**2 + y**2) / 12}"/>
+            </inertial>
+        </link>
+    </xacro:macro>
+    <material name="green">
+        <color rgba="0.0 0.6 0.0 1"/>
+    </material>
+    <material name="blue">
+        <color rgba="0.0 0.0 0.5 1"/>
+    </material>
+    <material name="transp">
+        <color rgba="0.0 0.0 0.0 0"/>
+    </material>
+    <xacro:box_gen linkname="${chasis_linkname}" x="${chasis_x}" y="${chasis_y}" z="${chasis_z}" mass="${chasis_mass}" mu="${chasis_mu}" material="${chasis_material}"/>
+    <!--A little trick to compute the view matrix in the simulation-->
+    <xacro:trick_box linkname="cam" x="${cam_x}" y="${cam_y}" z="${cam_z}"/>
+    <xacro:trick_box linkname="cam_dir" x="${cam_x}" y="${cam_y}" z="${cam_z}"/>
+    <xacro:trick_box linkname="cam_up" x="${cam_x}" y="${cam_y}" z="${cam_z}"/>
+    <joint name="${chasis_linkname}_to_cam" type="fixed">
+        <parent link="${chasis_linkname}"/>
+        <child link="cam"/>
+        <origin xyz="${cam_px} ${cam_py} ${cam_pz}"/>
+    </joint>
+    <!--A little trick to compute the view matrix in the simulation-->
+    <joint name="cam_to_cam_dir" type="fixed">
+        <parent link="cam"/>
+        <child link="cam_dir"/>
+        <origin xyz="${cam_x} 0 0"/>
+    </joint>
+    <joint name="cam_to_cam_up" type="fixed">
+        <parent link="cam"/>
+        <child link="cam_up"/>
+        <origin xyz="0 0 ${cam_z}"/>
+    </joint>
+    <xacro:wheel_macro parent_link="${chasis_linkname}" 
+                        suffix="FR" 
+                        xyz="${chasis_x/2 - wheel_radius} ${-chasis_y/2 - wheel_length/2} 0.0"
+                        dir="1.0"
+                        />
+    <xacro:wheel_macro parent_link="${chasis_linkname}" 
+                        suffix="FL" 
+                        xyz="${chasis_x/2 - wheel_radius} ${chasis_y/2 + wheel_length/2} 0.0"
+                        dir="-1.0"
+                        />
+    <xacro:wheel_macro parent_link="${chasis_linkname}" 
+                        suffix="BR" 
+                        xyz="${-chasis_x/2 + wheel_radius} ${-chasis_y/2 - wheel_length/2} 0.0"
+                        dir="-1.0"
+                        />
+    <xacro:wheel_macro parent_link="${chasis_linkname}" 
+                        suffix="BL" 
+                        xyz="${-chasis_x/2 + wheel_radius} ${chasis_y/2 + wheel_length/2} 0.0"
+                        dir="1.0"
+                        />
+</robot>

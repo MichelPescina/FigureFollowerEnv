@@ -1,0 +1,1232 @@
+<?xml version="1.0" ?>
+<robot name="omni_robot">
+  <material name="green">
+    <color rgba="0.0 0.6 0.0 1"/>
+  </material>
+  <material name="blue">
+    <color rgba="0.0 0.0 0.5 1"/>
+  </material>
+  <material name="transp">
+    <color rgba="0.0 0.0 0.0 0"/>
+  </material>
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.2 0.09 0.025"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.2 0.09 0.025"/>
+      </geometry>
+      <contact_coefficients mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.451"/>
+      <inertia ixx="0.00032791458333333336" ixy="0.0" ixz="0.0" iyy="0.001526822916666667" iyz="0.0" izz="0.0018077583333333336"/>
+    </inertial>
+  </link>
+  <link name="cam">
+    <visual>
+      <geometry>
+        <box size="0.045 0.045 0.045"/>
+      </geometry>
+      <material name="transp"/>
+    </visual>
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <link name="cam_dir">
+    <visual>
+      <geometry>
+        <box size="0.045 0.045 0.045"/>
+      </geometry>
+      <material name="transp"/>
+    </visual>
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <link name="cam_up">
+    <visual>
+      <geometry>
+        <box size="0.045 0.045 0.045"/>
+      </geometry>
+      <material name="transp"/>
+    </visual>
+    <inertial>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+    </inertial>
+  </link>
+  <joint name="base_link_to_cam" type="fixed">
+    <parent link="base_link"/>
+    <child link="cam"/>
+    <origin xyz="0.1 0.0 0.0475"/>
+  </joint>
+  <!--A little trick to compute the view matrix in the simulation-->
+  <joint name="cam_to_cam_dir" type="fixed">
+    <parent link="cam"/>
+    <child link="cam_dir"/>
+    <origin xyz="0.045 0 0"/>
+  </joint>
+  <joint name="cam_to_cam_up" type="fixed">
+    <parent link="cam"/>
+    <child link="cam_up"/>
+    <origin xyz="0 0 0.045"/>
+  </joint>
+  <material name="gray">
+    <color rgba="0.2 0.2 0.2 1"/>
+  </material>
+  <material name="light_gray">
+    <color rgba="0.3 0.3 0.3 1"/>
+  </material>
+  <link name="FR_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.027" radius="0.03"/>
+      </geometry>
+      <material name="light_gray"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.027" radius="0.03"/>
+      </geometry>
+      <origin rpy="0 0.0 0" xyz="0 0 0"/>
+      <contact_coefficients kd="0.5" mu="0.0"/>
+    </collision>
+    <inertial>
+      <mass value="0.022"/>
+      <inertia ixx="6.286500000000001e-06" ixy="0.0" ixz="0.0" iyy="6.286500000000001e-06" iyz="0.0" izz="9.899999999999998e-06"/>
+    </inertial>
+  </link>
+  <link name="FR_roller_0">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_0" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_0"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.03 0.0 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="FR_roller_1">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_1" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_1"/>
+    <origin rpy="0.0 0.0 0.6283185307179586" xyz="0.024270509831248423 0.017633557568774192 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="FR_roller_2">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_2" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_2"/>
+    <origin rpy="0.0 0.0 1.2566370614359172" xyz="0.009270509831248424 0.028531695488854605 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="FR_roller_3">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_3" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_3"/>
+    <origin rpy="0.0 0.0 1.8849555921538759" xyz="-0.00927050983124842 0.02853169548885461 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="FR_roller_4">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_4" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_4"/>
+    <origin rpy="0.0 0.0 2.5132741228718345" xyz="-0.02427050983124842 0.017633557568774196 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="FR_roller_5">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_5" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_5"/>
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="-0.03 3.673940397442059e-18 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="FR_roller_6">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_6" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_6"/>
+    <origin rpy="0.0 0.0 3.7699111843077517" xyz="-0.024270509831248423 -0.01763355756877419 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="FR_roller_7">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_7" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_7"/>
+    <origin rpy="0.0 0.0 4.39822971502571" xyz="-0.009270509831248426 -0.028531695488854605 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="FR_roller_8">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_8" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_8"/>
+    <origin rpy="0.0 0.0 5.026548245743669" xyz="0.009270509831248417 -0.02853169548885461 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="FR_roller_9">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FR_wheel_to_FR_roller_9" type="continuous">
+    <parent link="FR_wheel"/>
+    <child link="FR_roller_9"/>
+    <origin rpy="0.0 0.0 5.654866776461628" xyz="0.02427050983124842 -0.0176335575687742 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <joint name="base_link_to_FR_wheel" type="continuous">
+    <parent link="base_link"/>
+    <child link="FR_wheel"/>
+    <origin rpy="1.5707963267948966 0.0 3.141592653589793" xyz="0.07 -0.058499999999999996 0.0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="FL_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.027" radius="0.03"/>
+      </geometry>
+      <material name="light_gray"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.027" radius="0.03"/>
+      </geometry>
+      <origin rpy="0 0.0 0" xyz="0 0 0"/>
+      <contact_coefficients kd="0.5" mu="0.0"/>
+    </collision>
+    <inertial>
+      <mass value="0.022"/>
+      <inertia ixx="6.286500000000001e-06" ixy="0.0" ixz="0.0" iyy="6.286500000000001e-06" iyz="0.0" izz="9.899999999999998e-06"/>
+    </inertial>
+  </link>
+  <link name="FL_roller_0">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_0" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_0"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.03 0.0 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="FL_roller_1">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_1" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_1"/>
+    <origin rpy="0.0 0.0 0.6283185307179586" xyz="0.024270509831248423 0.017633557568774192 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="FL_roller_2">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_2" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_2"/>
+    <origin rpy="0.0 0.0 1.2566370614359172" xyz="0.009270509831248424 0.028531695488854605 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="FL_roller_3">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_3" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_3"/>
+    <origin rpy="0.0 0.0 1.8849555921538759" xyz="-0.00927050983124842 0.02853169548885461 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="FL_roller_4">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_4" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_4"/>
+    <origin rpy="0.0 0.0 2.5132741228718345" xyz="-0.02427050983124842 0.017633557568774196 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="FL_roller_5">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_5" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_5"/>
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="-0.03 3.673940397442059e-18 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="FL_roller_6">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_6" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_6"/>
+    <origin rpy="0.0 0.0 3.7699111843077517" xyz="-0.024270509831248423 -0.01763355756877419 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="FL_roller_7">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_7" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_7"/>
+    <origin rpy="0.0 0.0 4.39822971502571" xyz="-0.009270509831248426 -0.028531695488854605 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="FL_roller_8">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_8" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_8"/>
+    <origin rpy="0.0 0.0 5.026548245743669" xyz="0.009270509831248417 -0.02853169548885461 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="FL_roller_9">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="FL_wheel_to_FL_roller_9" type="continuous">
+    <parent link="FL_wheel"/>
+    <child link="FL_roller_9"/>
+    <origin rpy="0.0 0.0 5.654866776461628" xyz="0.02427050983124842 -0.0176335575687742 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <joint name="base_link_to_FL_wheel" type="continuous">
+    <parent link="base_link"/>
+    <child link="FL_wheel"/>
+    <origin rpy="1.5707963267948966 0.0 3.141592653589793" xyz="0.07 0.058499999999999996 0.0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="BR_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.027" radius="0.03"/>
+      </geometry>
+      <material name="light_gray"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.027" radius="0.03"/>
+      </geometry>
+      <origin rpy="0 0.0 0" xyz="0 0 0"/>
+      <contact_coefficients kd="0.5" mu="0.0"/>
+    </collision>
+    <inertial>
+      <mass value="0.022"/>
+      <inertia ixx="6.286500000000001e-06" ixy="0.0" ixz="0.0" iyy="6.286500000000001e-06" iyz="0.0" izz="9.899999999999998e-06"/>
+    </inertial>
+  </link>
+  <link name="BR_roller_0">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_0" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_0"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.03 0.0 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="BR_roller_1">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_1" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_1"/>
+    <origin rpy="0.0 0.0 0.6283185307179586" xyz="0.024270509831248423 0.017633557568774192 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="BR_roller_2">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_2" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_2"/>
+    <origin rpy="0.0 0.0 1.2566370614359172" xyz="0.009270509831248424 0.028531695488854605 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="BR_roller_3">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_3" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_3"/>
+    <origin rpy="0.0 0.0 1.8849555921538759" xyz="-0.00927050983124842 0.02853169548885461 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="BR_roller_4">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_4" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_4"/>
+    <origin rpy="0.0 0.0 2.5132741228718345" xyz="-0.02427050983124842 0.017633557568774196 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="BR_roller_5">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_5" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_5"/>
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="-0.03 3.673940397442059e-18 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="BR_roller_6">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_6" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_6"/>
+    <origin rpy="0.0 0.0 3.7699111843077517" xyz="-0.024270509831248423 -0.01763355756877419 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="BR_roller_7">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_7" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_7"/>
+    <origin rpy="0.0 0.0 4.39822971502571" xyz="-0.009270509831248426 -0.028531695488854605 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="BR_roller_8">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_8" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_8"/>
+    <origin rpy="0.0 0.0 5.026548245743669" xyz="0.009270509831248417 -0.02853169548885461 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <link name="BR_roller_9">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="-0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BR_wheel_to_BR_roller_9" type="continuous">
+    <parent link="BR_wheel"/>
+    <child link="BR_roller_9"/>
+    <origin rpy="0.0 0.0 5.654866776461628" xyz="0.02427050983124842 -0.0176335575687742 0.0"/>
+    <axis xyz="0 0.7071067811865476 0.7071067811865476"/>
+  </joint>
+  <joint name="base_link_to_BR_wheel" type="continuous">
+    <parent link="base_link"/>
+    <child link="BR_wheel"/>
+    <origin rpy="1.5707963267948966 0.0 3.141592653589793" xyz="-0.07 -0.058499999999999996 0.0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="BL_wheel">
+    <visual>
+      <geometry>
+        <cylinder length="0.027" radius="0.03"/>
+      </geometry>
+      <material name="light_gray"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.027" radius="0.03"/>
+      </geometry>
+      <origin rpy="0 0.0 0" xyz="0 0 0"/>
+      <contact_coefficients kd="0.5" mu="0.0"/>
+    </collision>
+    <inertial>
+      <mass value="0.022"/>
+      <inertia ixx="6.286500000000001e-06" ixy="0.0" ixz="0.0" iyy="6.286500000000001e-06" iyz="0.0" izz="9.899999999999998e-06"/>
+    </inertial>
+  </link>
+  <link name="BL_roller_0">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_0" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_0"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.03 0.0 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="BL_roller_1">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_1" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_1"/>
+    <origin rpy="0.0 0.0 0.6283185307179586" xyz="0.024270509831248423 0.017633557568774192 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="BL_roller_2">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_2" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_2"/>
+    <origin rpy="0.0 0.0 1.2566370614359172" xyz="0.009270509831248424 0.028531695488854605 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="BL_roller_3">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_3" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_3"/>
+    <origin rpy="0.0 0.0 1.8849555921538759" xyz="-0.00927050983124842 0.02853169548885461 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="BL_roller_4">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_4" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_4"/>
+    <origin rpy="0.0 0.0 2.5132741228718345" xyz="-0.02427050983124842 0.017633557568774196 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="BL_roller_5">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_5" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_5"/>
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="-0.03 3.673940397442059e-18 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="BL_roller_6">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_6" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_6"/>
+    <origin rpy="0.0 0.0 3.7699111843077517" xyz="-0.024270509831248423 -0.01763355756877419 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="BL_roller_7">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_7" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_7"/>
+    <origin rpy="0.0 0.0 4.39822971502571" xyz="-0.009270509831248426 -0.028531695488854605 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="BL_roller_8">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_8" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_8"/>
+    <origin rpy="0.0 0.0 5.026548245743669" xyz="0.009270509831248417 -0.02853169548885461 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <link name="BL_roller_9">
+    <visual>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <material name="gray"/>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.018" radius="0.006"/>
+      </geometry>
+      <origin rpy="0.7853981633974483 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <contact_coefficients kd="0.2" mu="0.5"/>
+    </collision>
+    <inertial>
+      <mass value="0.0015"/>
+      <inertia ixx="5.4e-08" ixy="0.0" ixz="0.0" iyy="5.4e-08" iyz="0.0" izz="2.7e-08"/>
+    </inertial>
+  </link>
+  <joint name="BL_wheel_to_BL_roller_9" type="continuous">
+    <parent link="BL_wheel"/>
+    <child link="BL_roller_9"/>
+    <origin rpy="0.0 0.0 5.654866776461628" xyz="0.02427050983124842 -0.0176335575687742 0.0"/>
+    <axis xyz="0 0.7071067811865476 -0.7071067811865476"/>
+  </joint>
+  <joint name="base_link_to_BL_wheel" type="continuous">
+    <parent link="base_link"/>
+    <child link="BL_wheel"/>
+    <origin rpy="1.5707963267948966 0.0 3.141592653589793" xyz="-0.07 0.058499999999999996 0.0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+</robot>

@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="wheel">
+    <!--PROPERTIES DEFINITIONS-->
+    <xacro:property name="nrollers" value="10"/>
+    <xacro:property name="wheel_radius" value="0.03"/>
+    <xacro:property name="wheel_length" value="0.027"/>
+    <xacro:property name="wheel_mass" value="0.022"/>
+    <xacro:property name="wheel_mu" value="0.0"/>
+    <xacro:property name="wheel_kd" value="0.5"/>
+    <xacro:property name="roller_radius" value="0.006"/>
+    <xacro:property name="roller_length" value="0.018"/>
+    <xacro:property name="roller_mass" value="0.0015"/>
+    <xacro:property name="roller_mu" value="0.5"/>
+    <xacro:property name="roller_kd" value="0.2"/>
+    <xacro:property name="_wheel_material_defined" value="False" scope="global"/>
+    <!--MACRO DEFINITIONS-->
+    <xacro:macro name="roller_macro" params="parent_link suffix index angle dir">
+        <xacro:property name="linkname" value="${suffix}_roller_${index}"/>
+        <xacro:property name="x" value="${wheel_radius * cos(radians(angle * index))}"/>
+        <xacro:property name="y" value="${wheel_radius * sin(radians(angle * index))}"/>
+        <xacro:property name="z" value="0.0"/>
+        <link name="${linkname}">
+            <visual>
+                <geometry>
+                    <cylinder radius="${roller_radius}" length="${roller_length}"/>
+                </geometry>
+                <material name="gray"/>
+                <origin xyz="0.0 0.0 0.0" rpy="${radians(45) * dir} 0.0 0.0"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder radius="${roller_radius}" length="${roller_length}"/>
+                </geometry>
+                <origin xyz="0.0 0.0 0.0" rpy="${radians(45) * dir} 0.0 0.0"/>
+                <contact_coefficients mu="${roller_mu}" kd="${roller_kd}"/>
+            </collision>
+            <inertial>
+                <mass value="${roller_mass}"/>
+                <inertia ixx="${roller_mass * (3*roller_radius**2 + roller_length**2) / 12}" ixy="0.0" ixz="0.0"
+                         iyy="${roller_mass * (3*roller_radius**2 + roller_length**2) / 12}"  iyz="0.0"
+                         izz="${roller_mass * roller_radius**2 / 2}"/>
+            </inertial>
+        </link>
+        <joint name="${parent_link}_to_${linkname}" type="continuous">
+            <parent link="${parent_link}"/>
+            <child link="${linkname}"/>
+            <origin xyz="${x} ${y} ${z}" rpy="0.0 0.0 ${radians(angle*index)}"/>
+            <axis xyz="0 ${cos(radians(45))} ${-sin(radians(45) * dir)}"/>
+        </joint>
+    </xacro:macro>
+    <xacro:macro name="loop" params="items:=^ parent_link suffix angle dir">
+        <xacro:if value="${items}">
+            <!--Extracting current element-->
+            <xacro:property name="item" value="${items.pop(0)}"/>
+            <!--Code-->
+            <xacro:roller_macro parent_link="${parent_link}" suffix="${suffix}" index="${item}" angle="${angle}" dir="${dir}"/>
+            <!--Recursion-->
+            <xacro:loop parent_link="${parent_link}" suffix="${suffix}" angle="${angle}" dir="${dir}"/>
+        </xacro:if>
+    </xacro:macro>
+    <!--dir should be 1.0 or -1.0, this is useful for inverting the roller direction-->
+    <xacro:macro name="wheel_macro" params="parent_link suffix xyz dir">
+        <xacro:property name="linkname" value="${suffix}_wheel"/>
+        <xacro:property name="roller_list" value="${list(python.range(nrollers))}"/>
+        <xacro:property name="roller_angle" value="${360/nrollers}"/>
+        <xacro:if value="${_wheel_material_defined == False}">
+            <xacro:property name="_wheel_material_defined" value="True" scope="global"/>
+            <material name="gray">
+                <color rgba="0.2 0.2 0.2 1"/>
+            </material>
+            <material name="light_gray">
+                <color rgba="0.3 0.3 0.3 1"/>
+            </material>
+        </xacro:if>
+        <link name="${linkname}">
+            <visual>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+                </geometry>
+                <material name="light_gray"/>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder radius="${wheel_radius}" length="${wheel_length}"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0.0 0"/>
+                <contact_coefficients mu="${wheel_mu}" kd="${wheel_kd}"/>
+            </collision>
+            <inertial>
+                <mass value="${wheel_mass}"/>
+                <inertia ixx="${wheel_mass * (3*wheel_radius**2 + wheel_length**2) / 12}" ixy="0.0" ixz="0.0"
+                         iyy="${wheel_mass * (3*wheel_radius**2 + wheel_length**2) / 12}"  iyz="0.0"
+                         izz="${wheel_mass * wheel_radius**2 / 2}"/>
+            </inertial>
+        </link>
+        <xacro:loop items="${roller_list}" parent_link="${linkname}" suffix="${suffix}" angle="${roller_angle}" dir="${dir}"/>
+        <joint name="${parent_link}_to_${linkname}" type="continuous">
+            <parent link="${parent_link}"/>
+            <child link="${linkname}"/>
+            <origin xyz="${xyz}" rpy="${radians(90)} 0.0 ${radians(180)}"/>
+            <axis xyz="0 0 1"/>
+        </joint>
+    </xacro:macro>
+</robot>

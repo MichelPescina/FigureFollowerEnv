@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="square">
+    <xacro:property name="height" value="0.14"/>
+    <xacro:property name="side" value="${sqrt(2)}"/>
+    <xacro:property name="mesh_scale" value="${height/side}"/>
+    <xacro:property name="x" value="${0.1 * mesh_scale}"/>
+    <xacro:property name="y" value="${side * mesh_scale}"/>
+    <xacro:property name="z" value="${side * mesh_scale}"/>
+    <xacro:property name="mass" value="1.0"/>
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <mesh filename="square.obj" scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${x} ${y} ${z}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${mass}"/>
+            <inertia ixx="${mass * (z**2 + y**2) / 12}" ixy="0.0" ixz="0.0"
+                     iyy="${mass * (z**2 + x**2) / 12}" iyz="0.0"
+                     izz="${mass * (x**2 + y**2) / 12}"/>
+        </inertial>
+    </link>
+    <!--
+    <link name="test">
+        <visual>
+            <geometry>
+                <box size="${x} ${y} ${z}"/>
+            </geometry>
+            <material name="Miau">
+                <color rgba="1.0 0.0 0.0 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="base_link_to_test" type="fixed">
+        <parent link="base_link"/>
+        <child link="test"/>
+    </joint>
+    -->
+</robot>

@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<robot name="pentagon">
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="pentagon.obj" scale="0.0773900966300059 0.0773900966300059 0.0773900966300059"/>
+      </geometry>
+      <origin rpy="1.5707963267948966 0.0 0.0" xyz="0.0 0.0 -0.00739009663000588"/>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.00773900966300059 0.14720471139335745 0.14"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.003439102254700139" ixy="0.0" ixz="0.0" iyy="0.001638324355880335" iyz="0.0" izz="0.0018107599439138066"/>
+    </inertial>
+  </link>
+  <!--
+    <link name="test">
+        <visual>
+            <geometry>
+                <box size="${x} ${y} ${z}"/>
+            </geometry>
+            <material name="Miau">
+                <color rgba="1.0 0.0 0.0 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="base_link_to_test" type="fixed">
+        <parent link="base_link"/>
+        <child link="test"/>
+    </joint>
+    -->
+</robot>

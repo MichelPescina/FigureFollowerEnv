@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="triangle">
+    <xacro:property name="height" value="0.14"/>
+    <xacro:property name="base" value="${2.0 *sin(radians(60))}"/>
+    <xacro:property name="start_height" value="${base * sin(radians(60))}"/>
+    <xacro:property name="mesh_scale" value="${height/start_height}"/>
+    <xacro:property name="x" value="${0.1 * mesh_scale}"/>
+    <xacro:property name="y" value="${base * mesh_scale}"/>
+    <xacro:property name="z" value="${start_height * mesh_scale}"/>
+    <xacro:property name="base_to_center" value="${cos(radians(60)) * mesh_scale}"/>
+    <xacro:property name="offset_z" value="${base_to_center - z/2}"/>
+    <xacro:property name="mass" value="1.0"/>
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <mesh filename="triangle.obj" scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
+            </geometry>
+            <origin xyz="0.0 0.0 ${offset_z}" rpy="${radians(-30)} 0.0 0.0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${x} ${y} ${z}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${mass}"/>
+            <inertia ixx="${mass * (z**2 + y**2) / 12}" ixy="0.0" ixz="0.0"
+                     iyy="${mass * (z**2 + x**2) / 12}" iyz="0.0"
+                     izz="${mass * (x**2 + y**2) / 12}"/>
+        </inertial>
+    </link>
+    <!--
+    <link name="test">
+        <visual>
+            <geometry>
+                <box size="${x} ${y} ${z}"/>
+            </geometry>
+            <material name="Miau">
+                <color rgba="1.0 0.0 0.0 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="base_link_to_test" type="fixed">
+        <parent link="base_link"/>
+        <child link="test"/>
+    </joint>
+    -->
+</robot>

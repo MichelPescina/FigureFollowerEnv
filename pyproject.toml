@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "FigFollowerEnv"
+version = "0.0.1"
+authors = [
+  { name="Michel Pescina", email="gatocorreo27@gmail.com" },
+]
+description = "A Gymnasium Environment for Figure Following task."
+dependencies = [
+  "gymnasium",
+  "numpy",
+  "pybullet",
+]
