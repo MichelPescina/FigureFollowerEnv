@@ -66,7 +66,7 @@ class FigFollower(gym.Env):
         except:
             pass
         self.fps = fps
-        self._map_gen = MapGenerator(20, 2, 10, 3)
+        self._map_gen = MapGenerator(20, 15, 10, 3)
         self._skip_frames = 240 // fps
         self._max_timestep = int(max_time * fps)
         self._max_speed = max_speed
