@@ -26,7 +26,7 @@ class FigFollower(gym.Env):
     """
 
     metadata = {"render_modes": ["rgb_array"], "render_fps":30}
-    def __init__(self, width=320, height=240, fps=30, max_speed = 10.0, max_time = 180, render_mode = None):
+    def __init__(self, width=320, height=240, fps=30, max_speed = 10.0, max_time = 180, nodes = 10, render_mode = None):
         """
         Initializes an instance of the class FigFollower
 
@@ -42,13 +42,15 @@ class FigFollower(gym.Env):
             Maximum speed for the wheels to spin.
         max_time : int
             Maximum number of simulation seconds allowed.
+        nodes : int
+            How many signals are in the path.
         render_mode : str
             Indicates Gymansium how to render this environment.
         """
 
         self.resources_path = get_assets_path()
         self.action_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(4,))
-        self.observation_space = gym.spaces.Box(low=-0.1, high=1.1, shape=(3, height, width), dtype=np.float32)
+        self.observation_space = gym.spaces.Box(low=0.0, high=1.0, shape=(3, height, width), dtype=np.float32)
         self._width = width
         self._height = height
         self._proj_matrix = p.computeProjectionMatrixFOV(70, (width/height), 0.0001, 30.0)
@@ -66,7 +68,7 @@ class FigFollower(gym.Env):
         except:
             pass
         self.fps = fps
-        self._map_gen = MapGenerator(20, 15, 10, 3)
+        self._map_gen = MapGenerator(20, nodes, 10, 3)
         self._skip_frames = 240 // fps
         self._max_timestep = int(max_time * fps)
         self._max_speed = max_speed

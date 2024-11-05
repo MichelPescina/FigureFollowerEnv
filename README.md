@@ -38,6 +38,8 @@ There a couple of options you can use to customize this environment. These are a
   - Maximum speed for the wheels to spin.
 * max_time : int
   - Maximum number of simulation seconds allowed.
+* nodes : int
+  - How many signals are in the path.
 * render_mode : str
   - Indicates Gymansium how to render this environment.
 
