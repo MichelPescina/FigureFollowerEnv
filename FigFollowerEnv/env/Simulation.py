@@ -120,7 +120,7 @@ class FigFollower(gym.Env):
         self._identify_joints()
         obs = self._render(is_observation=True)
         info = self._get_info()
-        print(self.nodes)
+        #print(self.nodes)
         return obs, info
 
 
@@ -146,7 +146,7 @@ class FigFollower(gym.Env):
         self._p.setJointMotorControlArray(self._robot_id,
                                           joints,
                                           controlMode = mode,
-                                          targetVelocities = action * self._max_speed
+                                          targetVelocities = np.clip(action, -1.0, 1.0) * self._max_speed
                                           )
         for i in range(self._skip_frames):
             self._p.stepSimulation()
