@@ -15,16 +15,16 @@ There are two ways to use this environment. The first one involves importing the
 import gymnasium
 import FigFollowerEnv
 
-env = gym.make('FigFollowerEnv/FigFollower', render_mode="rgb_array")
+env = gym.make('FigFollowerEnv/FigFollower-v0', render_mode="rgb_array")
 ```
 
 But you can also create the environment this way.
 
 ```python
 import gymnasium
-import FigFollowerEnv
+from FigFollowerEnv import FigFollowerV0
 
-env = FigFollowerEnv.FigFollower()
+env = FigFollowerV0()
 ```
 
 There a couple of options you can use to customize this environment. These are all of them:

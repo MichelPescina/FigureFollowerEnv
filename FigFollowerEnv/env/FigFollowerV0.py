@@ -10,7 +10,7 @@ from typing import Optional
 import math
 import os
 
-class FigFollower(gym.Env):
+class FigFollowerV0(gym.Env):
     """
     The FigFollower class implements a gymnasium evironment for the task involving an
     omnidirectional robot (with 4 mecanum wheels) following several geometric signals that show
