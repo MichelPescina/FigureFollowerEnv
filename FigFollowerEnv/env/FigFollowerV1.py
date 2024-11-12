@@ -49,7 +49,7 @@ class FigFollowerV1(gym.Env):
 
         self.resources_path = get_assets_path()
         self.action_space = gym.spaces.Box(low=-1.0, high=1.0, shape=(4,))
-        self.observation_space = gym.spaces.Box(low=0.0, high=1.0, shape=(3, height, width), dtype=np.float32)
+        self.observation_space = gym.spaces.Box(low=0, high=255, shape=(height, width, 3), dtype=np.uint8)
         self._width = width
         self._height = height
         self._proj_matrix = p.computeProjectionMatrixFOV(70, (width/height), 0.0001, 30.0)
@@ -115,9 +115,10 @@ class FigFollowerV1(gym.Env):
         self._prev_dist = 0
         self.target_node = 0
         self.nodes, _ = self._map_gen.generate()
+        self._last_pos = None
         self._load_nodes(self.nodes)
         self._identify_joints()
-        obs = self._render(is_observation=True)
+        obs = self.render()
         info = self._get_info()
         #print(self.nodes)
         return obs, info
@@ -143,7 +144,7 @@ class FigFollowerV1(gym.Env):
                   ]
         mode = p.VELOCITY_CONTROL
         action = np.clip(action, -1.0, 1.0)
-        motor_usage = np.mean(np.absolute(action)) / self.fps
+        motor_usage = np.mean(np.absolute(action)) / (self.fps * 10)
         self._p.setJointMotorControlArray(self._robot_id,
                                           joints,
                                           controlMode = mode,
@@ -155,7 +156,7 @@ class FigFollowerV1(gym.Env):
         terminated = False if self.timestep < self._end_step or self.target_node < len(self.nodes) else True
         truncated = True if self.timestep >= self._max_timestep else False
         reward = self._compute_reward(motor_usage)
-        observation = self._render(is_observation=True)
+        observation = self.render()
         info = self._get_info()
         return observation, reward, terminated, truncated, info
     
@@ -176,7 +177,7 @@ class FigFollowerV1(gym.Env):
         # Compute improvement
         if self.target_node >= len(self.nodes):
             self._last_pos = pos_a
-            improvement = -abs(dist)
+            improvement = 0.0
         else:
             improvement = max(self._prev_dist - dist, 0.0)
             self._prev_dist = dist if improvement > 0.0 else self._prev_dist
@@ -261,7 +262,7 @@ class FigFollowerV1(gym.Env):
                 }
 
 
-    def _render(self, is_observation = False):
+    def render(self):
         data_a = self._p.getLinkState(self._robot_id, self._cam_joint)
         data_b = self._p.getLinkState(self._robot_id, self._cam_front_joint)
         data_c = self._p.getLinkState(self._robot_id, self._cam_up_joint)
@@ -280,16 +281,7 @@ class FigFollowerV1(gym.Env):
             lightDirection=[8, 8, 2]
         )
         img = frame[2][:,:,:3]
-        if is_observation:
-            img = np.transpose(img, (2, 0, 1))
-            img = img.astype(np.float32)
-            img = img/255.0
         return img
-    
-    
-    def render(self):
-        if self.render_mode:
-            return self._render()
     
 
     def close(self):
