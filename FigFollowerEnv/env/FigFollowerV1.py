@@ -9,6 +9,7 @@ from importlib.util import find_spec
 from typing import Optional
 import math
 import os
+import sys
 
 class FigFollowerV1(gym.Env):
     """
@@ -57,13 +58,16 @@ class FigFollowerV1(gym.Env):
         self._p.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.phy_client_id = self._p._client
         self.render_mode = render_mode
+        self._p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
+        self._p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+        self.plugin = -1
         try:
             if os.environ["PYBULLET_EGL"]:
                 egl = find_spec('eglRenderer')
                 if egl:
-                    self._p.loadPlugin(egl.get_filename(), "_eglRendererPlugin")
+                    self.plugin = self._p.loadPlugin(egl.get_filename(), "_eglRendererPlugin")
                 else:
-                    self._p.loadPlugin("eglRendererPlugin")
+                    self.plugin = self._p.loadPlugin("eglRendererPlugin")
         except:
             pass
         self.fps = fps
@@ -155,6 +159,7 @@ class FigFollowerV1(gym.Env):
         self.timestep += 1
         terminated = False if self.timestep < self._end_step or self.target_node < len(self.nodes) else True
         truncated = True if self.timestep >= self._max_timestep else False
+        terminated = terminated or self._is_colliding() == 1
         reward = self._compute_reward(motor_usage)
         observation = self.render()
         info = self._get_info()
@@ -183,7 +188,7 @@ class FigFollowerV1(gym.Env):
             self._prev_dist = dist if improvement > 0.0 else self._prev_dist
         # Check for collisions
         collisions = self._is_colliding()
-        return (improvement / self._tile_size) - collisions - motor_usage
+        return (improvement / self._tile_size) - (collisions * 50) - motor_usage
 
 
     def _is_colliding(self):
@@ -278,13 +283,18 @@ class FigFollowerV1(gym.Env):
             viewMatrix=view_matrix,
             projectionMatrix=self._proj_matrix,
             shadow=1,
-            lightDirection=[8, 8, 2]
+            lightDirection=[8, 8, 2],
+            flags = self._p.ER_NO_SEGMENTATION_MASK
         )
+        #print("Frame size:", sys.getsizeof(frame[5]))
         img = frame[2][:,:,:3]
+        del(frame)
         return img
     
 
     def close(self):
+        if self.plugin >= 0:
+            self._p.unloadPlugin(self.plugin)
         if (self.phy_client_id >= 0):
             self._p.disconnect()
             self.phy_client_id = -1
