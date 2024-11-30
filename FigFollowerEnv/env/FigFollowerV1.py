@@ -76,21 +76,6 @@ class FigFollowerV1(gym.Env):
         self._max_timestep = int(max_time * fps)
         self._max_speed = max_speed
         self._tile_size = 0.2 # The map generator creates a route using tiles, the tile size is in meters
-        self.timestep = 0
-        self._robot_id = None
-        self._cam_joint = None
-        self._cam_up_joint = None
-        self._cam_front_joint = None
-        self._FR_joint = None
-        self._FL_joint = None
-        self._BR_joint = None
-        self._BL_joint = None
-        self._floor_id = None
-        self.nodes = None
-        self.target_node = 0
-        self._prev_dist = 0
-        self._last_pos = None
-        self._end_step = self._max_timestep
 
 
     def reset(self, seed: Optional[int] = None, options = None):
@@ -115,107 +100,20 @@ class FigFollowerV1(gym.Env):
         self._p.setGravity(0, 0, -9.8)
         self._floor_id = self._p.loadURDF("plane.urdf", [0, 0, 0])
         self.timestep = 0
-        self._end_step = self._max_timestep
+        self._end_step = self._max_timestep + 1
         self._prev_dist = 0
         self.target_node = 0
         self.nodes, _ = self._map_gen.generate()
         self._last_pos = None
         self._load_nodes(self.nodes)
         self._identify_joints()
+        self.max_reward = self._get_max_reward()
+        self.accum_rew = 0.0
+        self.accum_improv = 0.0
         obs = self.render()
         info = self._get_info()
         #print(self.nodes)
         return obs, info
-
-
-    def step(self, action : np.array):
-        """
-        Steps the simulation given the fps at initialization. E.g. if fps = 30
-        then the simulation steps the physics server 8 times to simulate a refresh rate
-        of this magnitude. The physics server runs needs to update 240 times to simulate
-        a real second, thus the formula for computing the steps skipped is 240/fps.
-
-        Parameters
-        ----------
-        action : numpy.array
-            A numpy array containing the an activation value for each motor in the following
-            order : [Front_Right, Front_Left, Back_Right, Back_Left].
-        """
-        joints = [self._FR_joint,
-                  self._FL_joint,
-                  self._BR_joint,
-                  self._BL_joint
-                  ]
-        mode = p.VELOCITY_CONTROL
-        action = np.clip(action, -1.0, 1.0)
-        motor_usage = np.mean(np.absolute(action)) / (self.fps * 10)
-        self._p.setJointMotorControlArray(self._robot_id,
-                                          joints,
-                                          controlMode = mode,
-                                          targetVelocities = action * self._max_speed
-                                          )
-        for i in range(self._skip_frames):
-            self._p.stepSimulation()
-        self.timestep += 1
-        terminated = False if self.timestep < self._end_step or self.target_node < len(self.nodes) else True
-        truncated = True if self.timestep >= self._max_timestep else False
-        terminated = terminated or self._is_colliding() == 1
-        reward = self._compute_reward(motor_usage)
-        observation = self.render()
-        info = self._get_info()
-        return observation, reward, terminated, truncated, info
-    
-
-    def _compute_reward(self, motor_usage):
-        pos_a = self._get_robot_pos()
-        pos_b = self._get_target_pos(self.target_node)
-        dist = math.sqrt(np.power((pos_b - pos_a), 2).sum())
-        # Check if the robot is close to the target node
-        if self.target_node < len(self.nodes) and dist < self._tile_size * 2:
-            if self.target_node == len(self.nodes)-1:
-                self._end_step = min(self.timestep + self.fps * 5, self._max_timestep)
-                self._last_pos = pos_a
-            self.target_node += 1
-            pos_b = self._get_target_pos(self.target_node)
-            dist = math.sqrt(np.power((pos_b - pos_a), 2).sum())
-            self._prev_dist = dist
-        # Compute improvement
-        if self.target_node >= len(self.nodes):
-            self._last_pos = pos_a
-            improvement = 0.0
-        else:
-            improvement = max(self._prev_dist - dist, 0.0)
-            self._prev_dist = dist if improvement > 0.0 else self._prev_dist
-        # Check for collisions
-        collisions = self._is_colliding()
-        return (improvement / self._tile_size) - (collisions * 50) - motor_usage
-
-
-    def _is_colliding(self):
-        vorbo = p.getContactPoints(bodyA = self._robot_id)
-        flago = 0.0
-        for v in vorbo:
-            if v[2] != self._floor_id:
-                flago = 1.0
-        return flago
-
-
-    def _get_target_pos(self, id):
-        if id < len(self.nodes):
-            data_b = self.nodes[id]
-            x = data_b.x * self._tile_size
-            y = data_b.y * self._tile_size
-        else:
-            x = self._last_pos[0]
-            y = self._last_pos[1]
-        return np.array([x, y])
-    
-
-    def _get_robot_pos(self):
-        data_a = self._p.getLinkState(self._robot_id, self._cam_joint)
-        x = data_a[0][0]
-        y = data_a[0][1]
-        return np.array([x, y])
 
 
     def _load_nodes(self, nodes):
@@ -259,12 +157,123 @@ class FigFollowerV1(gym.Env):
                 self._cam_front_joint = joint[0]
             elif joint[1] == b'cam_to_cam_up':
                 self._cam_up_joint = joint[0]
+    
+
+    def _get_max_reward(self):
+        max_reward = 0.0
+        for i in range(1, len(self.nodes)):
+            target_node = np.array([self.nodes[i].x, self.nodes[i].y])
+            curr_node = np.array([self.nodes[i-1].x, self.nodes[i-1].y])
+            dist = math.sqrt(np.power((target_node - curr_node), 2).sum()) * self._tile_size
+            max_reward += dist
+        return max_reward - (len(self.nodes)-1) * self._tile_size
+
+
+    def step(self, action : np.array):
+        """
+        Steps the simulation given the fps at initialization. E.g. if fps = 30
+        then the simulation steps the physics server 8 times to simulate a refresh rate
+        of this magnitude. The physics server runs needs to update 240 times to simulate
+        a real second, thus the formula for computing the steps skipped is 240/fps.
+
+        Parameters
+        ----------
+        action : numpy.array
+            A numpy array containing the an activation value for each motor in the following
+            order : [Front_Right, Front_Left, Back_Right, Back_Left].
+        """
+        joints = [self._FR_joint,
+                  self._FL_joint,
+                  self._BR_joint,
+                  self._BL_joint
+                  ]
+        mode = p.VELOCITY_CONTROL
+        action = np.clip(action, -1.0, 1.0)
+        motor_usage = np.mean(np.absolute(action)) / self.fps
+        self._p.setJointMotorControlArray(self._robot_id,
+                                          joints,
+                                          controlMode = mode,
+                                          targetVelocities = action * self._max_speed
+                                          )
+        for i in range(self._skip_frames):
+            self._p.stepSimulation()
+        self.timestep += 1
+        improv = self._improv()
+        terminated = False if self.timestep < self._end_step or self.target_node < len(self.nodes) else True
+        truncated = True if self.timestep >= self._max_timestep or self._is_colliding() == 1 else False
+        reward = improv - (motor_usage / 100) - self._is_colliding() * 10
+        self.accum_rew += reward.item()
+        self.accum_improv += improv
+        observation = self.render()
+        info = self._get_info()
+        return observation, reward, terminated, truncated, info
+    
+
+    def _improv(self):
+        """
+        Updates robots target signal and also computes the reward for getting
+        close to it.
+        """
+        pos_a = self._get_robot_pos()
+        pos_b = self._get_target_pos(self.target_node)
+        dist = math.sqrt(np.power((pos_b - pos_a), 2).sum())
+        # Check if the robot is close to the target node
+        if self.target_node < len(self.nodes) and dist < self._tile_size * 2:
+            # Once the robot reaches the final signal, sets a 5 second counter to reset
+            # the simulation. 
+            if self.target_node == len(self.nodes)-1:
+                self._end_step = min(self.timestep + self.fps * 5, self._max_timestep)
+                self._last_pos = pos_a
+            self.target_node += 1
+            pos_b = self._get_target_pos(self.target_node)
+            dist = math.sqrt(np.power((pos_b - pos_a), 2).sum())
+            self._prev_dist = dist
+        # Compute improvement
+        if self.target_node >= len(self.nodes):
+            # Once in the final step the robot must stop, that's why imporvement = 0
+            self._last_pos = pos_a
+            improvement = 0.0
+        else:
+            improvement = max(self._prev_dist - dist, 0.0)
+            self._prev_dist = dist if improvement > 0.0 else self._prev_dist
+        return improvement
+
+
+    def _is_colliding(self):
+        vorbo = p.getContactPoints(bodyA = self._robot_id)
+        flago = 0.0
+        for v in vorbo:
+            if v[2] != self._floor_id:
+                flago = 1.0
+        return flago
+
+
+    def _get_target_pos(self, id):
+        if id < len(self.nodes):
+            data_b = self.nodes[id]
+            x = data_b.x * self._tile_size
+            y = data_b.y * self._tile_size
+        else:
+            x = self._last_pos[0]
+            y = self._last_pos[1]
+        return np.array([x, y])
+    
+
+    def _get_robot_pos(self):
+        data_a = self._p.getLinkState(self._robot_id, self._cam_joint)
+        x = data_a[0][0]
+        y = data_a[0][1]
+        return np.array([x, y])
 
 
     def _get_info(self):
-        return {'target_node': self.target_node,
-                'total_nodes': len(self.nodes)
-                }
+        return {
+            'total_nodes': len(self.nodes),
+            'target_node': self.target_node,
+            'max_reward': self.max_reward,
+            'accum_reward': self.accum_rew,
+            'accum_improv': self.accum_improv
+        }
 
 
     def render(self):
@@ -286,7 +295,6 @@ class FigFollowerV1(gym.Env):
             lightDirection=[8, 8, 2],
             flags = self._p.ER_NO_SEGMENTATION_MASK
         )
-        #print("Frame size:", sys.getsizeof(frame[5]))
         img = frame[2][:,:,:3]
         del(frame)
         return img

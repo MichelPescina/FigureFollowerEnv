@@ -4,11 +4,11 @@ from FigFollowerEnv.env.FigFollowerV1 import FigFollowerV1
 from FigFollowerEnv.get_assets_path import get_assets_path
 
 register(
-    id="FigFollowerEnv/FigFollower-v0",
+    id="FigFollowerEnv-v0",
     entry_point="FigFollowerEnv.env.FigFollowerV0:FigFollowerV0",
 )
 
 register(
-    id="FigFollowerEnv/FigFollower-v1",
+    id="FigFollowerEnv-v1",
     entry_point="FigFollowerEnv.env.FigFollowerV1:FigFollowerV1",
 )

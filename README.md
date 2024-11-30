@@ -15,7 +15,7 @@ There are two ways to use this environment. The first one involves importing the
 import gymnasium
 import FigFollowerEnv
 
-env = gym.make('FigFollowerEnv/FigFollower-v0', render_mode="rgb_array")
+env = gym.make('FigFollowerEnv-v1', render_mode="rgb_array")
 ```
 
 But you can also create the environment this way.
