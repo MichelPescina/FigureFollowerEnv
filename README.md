@@ -116,7 +116,7 @@ If you don't want to install the package you can also copy the FigFollowerEnv in
 If you need to use the URDF and XACRO files for the four-wheeled omnidirectional robot and the other assets, go ahead, it's in the assets folder. It was incredibly cumbersome making those models and if I can leverage some of that work to someone else I'm happy to have been of help.
 
 ## Thanks
-I want to thank the IPICyT and CONAHCYT for having me participate in this project as well for all the support they provided.
+I want to thank the IPICyT and CONAHCYT for allowing me to participate in this project as well for all the support they provided.
 Also I want to thank Phd. Juan Gonzalo Barajas Ramírez, my lab mates and all of the institutions' personel for everything.
 Thank You!
 
