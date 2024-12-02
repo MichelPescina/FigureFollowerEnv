@@ -54,6 +54,7 @@ Si no quieres instalarlo puedes copiar la carpeta FigFollowerEnv a tus proyectos
 Si necesitas utilizar el URDF y XACRO del robot omnidireccional y de los demás assets adelante. Fue bastante pesado hacer esos modelos y si puedo ayudar a alguien a alivianar un pco su carga estaré feliz de haber ayudado.
 
 ## Agradecimientos
+El código en este repositorio fue resultado de un proyecto en el que participé durante mi estancia en el IPICyT
 Quiero agradecer al IPICyT y CONAHCYT por haberme permitido participar en este proyecto así como por el apoyo que me brindaron. También quiero agradecer al Dr. Juan Gonzalo Barajas Ramírez, a mis compañeros del laboratorio y personal de la institución por todo.
 ¡Muchas gracias!
 
@@ -116,8 +117,9 @@ If you don't want to install the package you can also copy the FigFollowerEnv in
 If you need to use the URDF and XACRO files for the four-wheeled omnidirectional robot and the other assets, go ahead, it's in the assets folder. It was incredibly cumbersome making those models and if I can leverage some of that work to someone else I'm happy to have been of help.
 
 ## Thanks
+The code on this repo was a result of a project I was part of during my internship at the IPICyT.
 I want to thank the IPICyT and CONAHCYT for allowing me to participate in this project as well for all the support they provided.
-Also I want to thank Phd. Juan Gonzalo Barajas Ramírez, my lab mates and all of the institutions' personel for everything.
+Also I want to thank Phd. Juan Gonzalo Barajas Ramírez, my lab mates and all of the institutions' personnel for everything.
 Thank You!
 
 I write this out of my own volition, it's simply something that I felt I needed to do.
